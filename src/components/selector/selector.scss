@@ -1,0 +1,35 @@
+.selector {
+  display: flex;
+  flex-direction: row;
+
+  &__list {
+    min-width: 170px;
+    list-style: none;
+    border: solid 1px #777;
+    margin: 0;
+    padding: inherit;
+  }
+
+  &__item {
+    padding: 10px 20px;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #ffd400;
+    }
+  }
+
+  &__arrows {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 40px;
+  }
+
+  &__arrow {
+    border: none;
+    background: none;
+    font-size: 2em;
+    color: #ffd400;
+  }
+}
