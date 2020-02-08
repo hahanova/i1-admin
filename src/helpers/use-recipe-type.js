@@ -8,10 +8,8 @@ export const useRecipeType = (recipeType) => {
   useEffect(() => {
     async function fetchData() {
       const response = await db.get('dishes/').then((dishes) => {
-        // console.log(dishes);
         return dishes;
       });;
-      // console.log('recipeType', recipeType)
       updateData(response[recipeType]);
     }
     fetchData();

@@ -1,8 +1,8 @@
 .course-form {
   &__container {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: baseline;
   }
 
   &__buttons {

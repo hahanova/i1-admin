@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import InputBase from '@material-ui/core/InputBase';
@@ -61,9 +61,8 @@ const CoursesPage = ({ location }) => {
     isSearched: false,
   });
 
-  const currentRecipeType = location.pathname.slice(1).toString();
+  const currentRecipeType = location.pathname.slice(1).toString() || 'maincourses';
   const recipes = useRecipeType(currentRecipeType);
-  console.log(currentRecipeType, recipes, courses);
 
   const updateCourses = (id) => {
     const updatedSearch = state.courses.filter(course => course.id !== id);
@@ -79,8 +78,9 @@ const CoursesPage = ({ location }) => {
         time,
         src,
         name,
-        id,
       } = courses[key];
+
+      const id = key;
 
       return (
         <CourseCard
@@ -93,6 +93,7 @@ const CoursesPage = ({ location }) => {
           duration={time}
           title={name}
           updateCourses={updateCourses}
+          type={currentRecipeType}
         />
       );
     });
@@ -112,7 +113,7 @@ const CoursesPage = ({ location }) => {
     : renderCourses(recipes);
 
   return (
-    <div>
+    <>
       <section className="course-managing">
         <div className={classes.search}>
           <div className={classes.searchIcon}>
@@ -139,7 +140,7 @@ const CoursesPage = ({ location }) => {
         {recipesComponent}
         {/* {state.isSearched ? renderCourses(state.courses) : renderCourses(courses)} */}
       </section>
-    </div>
+      </>
   );
 }
 

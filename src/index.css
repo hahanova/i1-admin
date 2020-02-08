@@ -24,7 +24,7 @@ a:hover {
   text-decoration: underline;
 }
 
-header, main {
+header, main, .main {
   padding: 0 5%;
 }
 

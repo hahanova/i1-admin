@@ -34,7 +34,7 @@ const HeaderComponent = () => {
   return (
     <header className="header shadow">
       <div className="header__nav">
-        {recipeTypes.map((dishType) => <Link to={`/${dishType}`} className="header__nav-link">{dishType}</Link>)}
+        {recipeTypes.map((dishType) => <Link to={`/${dishType}`} key={dishType} className="header__nav-link">{dishType}</Link>)}
       </div>
       <div className="header__auth">
         <p>{user}</p>

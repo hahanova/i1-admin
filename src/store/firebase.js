@@ -16,15 +16,15 @@ class Database {
     this.database = firebase.database();
   }
 
-  addTaskToDatabase(task, table) {
-    return this.database.ref(table).push(task).key;
+  add(data, table) {
+    return this.database.ref(table).push(data).key;
   }
 
   get(tableName) {
     const self = this;
 
     return new Promise(function (resolve) {
-      self.database.ref(tableName + '/').on("value", function (snapshot) {
+      self.database.ref(tableName + '/').on('value', function (snapshot) {
         resolve(snapshot.val());
       });
     })
@@ -34,7 +34,9 @@ class Database {
     const updates = {};
 
     updates[data[0]] = data[1];
-    this.database.ref().update(updates);
+    console.log(555,updates)
+    console.log(4444,data)
+    // this.database.ref().update(updates);
   }
 
   delete(id) {

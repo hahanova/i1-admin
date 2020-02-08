@@ -22,6 +22,7 @@ const Routing = () => {
       <Route path="/desserts" component={recipes} />
       <Route path="/drinks" component={recipes} />
       <Route path="/sauces" component={recipes} />
+      <Route path="/edit" component={CoursePage} />
       <Route component={NoMatch} />
     </Switch>
   );

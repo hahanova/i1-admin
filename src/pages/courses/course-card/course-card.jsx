@@ -25,7 +25,7 @@ const useStyles = makeStyles({
   },
 });
 
-const CourseCardComponent = ({ description, difficulty, ingredients, title, imageSrc, duration, id, updateCourses }) => {
+const CourseCardComponent = ({ description, difficulty, ingredients, title, imageSrc, duration, id, type, updateCourses }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -65,7 +65,7 @@ const CourseCardComponent = ({ description, difficulty, ingredients, title, imag
         </CardActionArea>
         <CardActions>
           <Link className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
-            to={`/courses/edit/${id}`}
+            to={`/edit/${type}/${id}`}
           >
             Edit
            </Link>

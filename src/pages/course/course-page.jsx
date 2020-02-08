@@ -1,112 +1,160 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
 
 import SimpleBreadcrumbs from '../../components/breadcrumbs/breadcrumbs';
-import Selector from '../../components/selector/selector';
-import { authors as allAuthors } from '../../store/authors';
 
-import {
-  selectCourses,
-  addCourseAction,
-  editCourseAction,
-} from '../../store';
+import { db } from '../../store/firebase';
 
 import './course-page.scss';
 
-const getTodayDate = () => {
-  var today = new Date();
-
-  return today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-};
-
 const CoursePage = ({ history, location }) => {
-  const courseId = location.pathname.split('/').pop();
-  const courses = useSelector(selectCourses);
-  const dispatch = useDispatch();
-  const data = courseId === 'new' ? {
-    authors: [],
-    creationDate: getTodayDate(),
-    description: '',
-    duration: '2',
-    image: '',
-    title: '',
-  } : courses[courses.findIndex(course => course.id === courseId)];
+  const [, , currentType, id] = location.pathname.split('/');
 
-  const [state, setState] = useState(data);
+  const [state, setState] = useState({
+    ingredients: [],
+    time: [],
+    description: '',
+    src: '',
+  });
+console.log('currentType',currentType)
+  const t = currentType || '';
+
+  const [type, setType] = useState(t);console.log('type',type)
+  const [difficulty, setDifficulty] = useState('');console.log('difficulty',difficulty)
+
+  useEffect(() => {
+    if (currentType && id) {
+      async function fetchData() {
+        const response = await db.get(`dishes/${currentType}/${id}`).then((recipe) => {
+          return recipe;
+        });;
+
+        setState({...state, ...response});
+        // setType(response.type);
+        setDifficulty(response.difficulty);
+      }
+      fetchData();
+    }
+  }, [currentType, id]);
 
   const handleSaveBtn = () => {
     const {
-      authors,
-      creationDate,
+      src,
+      ingredients,
       description,
-      duration,
-      image,
-      title,
+      time,
+      name,
     } = state;
 
-    if (!creationDate || !description || !duration || !image || !title || !authors.length) {
-      alert('Please fullfill all fields');
+    if (!name || !type || !src || !ingredients || !description || !time || !difficulty) {
+      alert('Плиз, заполни все поля');
       return;
-    } else if (courseId === 'new') {
-      dispatch(addCourseAction(state));
+    } else if (id === 'new') {
+      db.add({ ...state, type, difficulty }, `dishes/${type}/`);
     } else {
-      dispatch(editCourseAction({...state, id: courseId }));
+      db.update({ ...state, type, difficulty });
+      // dispatch(editCourseAction({ ...state, id: id, type, difficulty }));
     }
 
-    history.push('/courses');
+    const nextLocation = type ? `/${type}` : 'maincourses';
+
+    history.push(nextLocation);
   };
 
   const onChangeField = ({ target: { value, id } }) => {
     setState({ ...state, [id]: value });
   };
 
-  const onClickSelector = (activeAuthors) => {
-    let authors = [];
-
-    activeAuthors.forEach((author) => { authors.push(author.name) });
-    setState({ ...state, authors });
+  const onSelectType = ({ target: { value } }) => {
+    setType(value);
+  };
+  const onSelectDifficulty = ({ target: { value } }) => {
+    setDifficulty(value);
   };
 
   return (
-    <section>
-      <SimpleBreadcrumbs title={data.title} />
+    <section className="main">{console.log('hello', {...state, type, difficulty})}
+      <SimpleBreadcrumbs title={state.name} type={currentType} />
       <form>
         <div className="course-form__container">
           <TextField
-            id="title"
+            id="name"
             label="Название"
-            defaultValue={state.title}
+            defaultValue={state.name}
             margin="normal"
             onChange={onChangeField}
           />
+
+          <FormControl>
+            <InputLabel id="type">тип блюда</InputLabel>
+            <Select
+              htmlFor="type"
+              value={type}
+              onChange={onSelectType}
+            >
+              <MenuItem value="maincourses">первое блюдо</MenuItem>
+              <MenuItem value="secondcourses">второе блюдо</MenuItem>
+              <MenuItem value="pies">пирог</MenuItem>
+              <MenuItem value="desserts">десерт</MenuItem>
+              <MenuItem value="drinks">напиток</MenuItem>
+              <MenuItem value="sauces">соус</MenuItem>
+            </Select>
+          </FormControl>
+
           <TextField
-            id="image"
+            id="src"
             label="юрл картинки"
             type="textarea"
-            defaultValue={state.image}
+            defaultValue={state.src}
             margin="normal"
             onChange={onChangeField}
           />
           <TextField
-            id="date"
-            label="Date"
-            type="date"
-            defaultValue={state.creationDate}
-            onChange={onChangeField}
-          />
-          <TextField
-            id="duration"
+            id="time"
             label="время приготовления"
-            type="number"
-            defaultValue={state.duration}
+            type="textarea"
+            defaultValue={state.time}
             margin="normal"
             onChange={onChangeField}
           />
+
+          <FormControl>
+            <InputLabel id="difficulty">сложность</InputLabel>
+            <Select
+              htmlFor="difficulty"
+              value={difficulty}
+              onChange={onSelectDifficulty}
+            >
+              <MenuItem value="1">изи бризи</MenuItem>
+              <MenuItem value="2">нормуль</MenuItem>
+              <MenuItem value="3">сложна</MenuItem>
+            </Select>
+          </FormControl>
         </div>
+
+        <label
+          id="ingredients"
+          className="course-form__description-title"
+        >
+          Ингридиенты
+        </label>
+
+        <textarea
+          id="ingredients"
+          className="course-form__description"
+          htmlFor="ingredients"
+          placeholder="2 яйца, 3ст муки..."
+          defaultValue={state.ingredients}
+          onChange={onChangeField}
+        >
+        </textarea>
 
         <label
           id="description"
@@ -124,13 +172,6 @@ const CoursePage = ({ history, location }) => {
           onChange={onChangeField}
         >
         </textarea>
-
-        <legend className="course-form__description-title">Authors' List</legend>
-        <Selector
-          options={allAuthors}
-          currentAuthors={state.authors}
-          handleValue={onClickSelector}
-        />
 
         <div className="course-form__buttons">
           <Button
