@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { BrowserRouter, Link } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -10,9 +10,11 @@ const SimpleBreadcrumbs = ({ title, type }) => {
   return (
     <Paper elevation={0} className="breadcrumbs">
       <Breadcrumbs aria-label="breadcrumb">
-        <Link to={`/${type}`}>
-          {type}
-        </Link>
+        <BrowserRouter>
+          <Link to={`/${type}`}>
+            {type}
+          </Link>
+        </BrowserRouter>
         <Typography color="textPrimary">
           {title || 'пиши новый рецепт'}
         </Typography>

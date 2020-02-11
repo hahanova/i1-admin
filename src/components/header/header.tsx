@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { BrowserRouter, Link } from 'react-router-dom';
 import logo from '../../logo.svg';
 
 import {
@@ -38,7 +38,9 @@ const HeaderComponent = () => {
       </div>
       <div className="header__auth">
         <p>{user}</p>
-        <Link to="/login" onClick={handleClick}>{authMessage}</Link>
+        <BrowserRouter>
+          <Link to="/login" onClick={handleClick}>{authMessage}</Link>
+        </BrowserRouter>
       </div>
     </header>
   );

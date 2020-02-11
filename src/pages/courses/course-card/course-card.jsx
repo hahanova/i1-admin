@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { BrowserRouter, Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -64,11 +64,13 @@ const CourseCardComponent = ({ description, difficulty, ingredients, title, imag
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Link className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
-            to={`/edit/${type}/${id}`}
-          >
-            Edit
-           </Link>
+          <BrowserRouter>
+            <Link className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
+              to={`/edit/${type}/${id}`}
+            >
+              Edit
+            </Link>
+          </BrowserRouter>
           <Button
             size="small"
             color="primary"

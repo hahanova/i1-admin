@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { BrowserRouter, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
@@ -129,12 +129,14 @@ const CoursesPage = ({ location }) => {
             onKeyPress={handleKeypress}
           />
         </div>
-        <Link
-          to="new"
-          className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
-        >
-          add recipe
-        </Link>
+        <BrowserRouter>
+          <Link
+            to="new"
+            className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
+          >
+            add recipe
+          </Link>
+        </BrowserRouter>
       </section>
       <section className="cards-wrapper">
         {recipesComponent}
