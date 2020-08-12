@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import {
   removeCourseAction,
 } from '../../../store';
+
+import { db } from '../../../store/firebase';
 
 import './course-card.scss';
 
@@ -32,8 +34,8 @@ const CourseCardComponent = ({ description, difficulty, ingredients, title, imag
   const removeCourse = () => {
     // eslint-disable-next-line no-restricted-globals
     if(confirm(`Точно хочешь удалить рецепт: ${title}`)) {
-      dispatch(removeCourseAction(id));
-      updateCourses(id);
+      db.delete(type, id);
+      dispatch(removeCourseAction({ id, type }));
     }
   };
 
@@ -64,13 +66,11 @@ const CourseCardComponent = ({ description, difficulty, ingredients, title, imag
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <BrowserRouter>
-            <Link className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
-              to={`/edit/${type}/${id}`}
-            >
-              Edit
-            </Link>
-          </BrowserRouter>
+          <Link className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
+            to={`/edit/${type}/${id}`}
+          >
+            Edit
+          </Link>
           <Button
             size="small"
             color="primary"
@@ -84,4 +84,4 @@ const CourseCardComponent = ({ description, difficulty, ingredients, title, imag
   );
 }
 
-export default connect()(CourseCardComponent);
+export default CourseCardComponent;

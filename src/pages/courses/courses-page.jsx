@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
@@ -56,20 +56,22 @@ const useStyles = makeStyles(theme => ({
 const CoursesPage = ({ location }) => {
   const classes = useStyles();
   const courses = useSelector(selectCourses);
-  const [state, setState] = useState({
-    courses: courses,
-    isSearched: false,
-  });
+  const [isSearched, setIsSearched] = useState(false);
+  const [searchedCourses, setSearchedCourses] = useState(null);
 
   const currentRecipeType = location.pathname.slice(1).toString() || 'maincourses';
-  const recipes = useRecipeType(currentRecipeType);
+  useRecipeType(currentRecipeType);
+  const recipes = courses[currentRecipeType];
+  console.log('recipes', recipes)
 
   const updateCourses = (id) => {
-    const updatedSearch = state.courses.filter(course => course.id !== id);
-    setState({ ...state, courses: updatedSearch });
+    console.log('state4', courses)
+    // const updatedSearch = courses.filter(course => course.id !== id);
+    // setState({ ...state, courses: updatedSearch });
   };
 
   const renderCourses = (courses) => {
+    console.log(44, courses);
     return Object.keys(courses).map((key) => {
       const {
         ingredients,
@@ -102,9 +104,17 @@ const CoursesPage = ({ location }) => {
   const handleKeypress = ({ key, target }) => {
     if (key === 'Enter') {
       const searchWord = target.value.toLowerCase();
-      const foundCourses = courses.filter(course => course.title.toLowerCase().includes(searchWord));
 
-      setState({ ...state, courses: foundCourses, isSearched: true });
+      const foundCourses = Object.keys(courses[currentRecipeType]).reduce((recipe, key) => {
+        if (courses[currentRecipeType][key].name.toLowerCase().includes(searchWord)) {
+          recipe[key] = courses[currentRecipeType][key];
+        }
+
+        return recipe;
+      }, {});
+
+      setIsSearched(true);
+      setSearchedCourses(foundCourses);
     }
   };
 
@@ -129,20 +139,18 @@ const CoursesPage = ({ location }) => {
             onKeyPress={handleKeypress}
           />
         </div>
-        <BrowserRouter>
-          <Link
-            to="new"
-            className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
-          >
-            add recipe
-          </Link>
-        </BrowserRouter>
+        <Link
+          to="new"
+          className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
+        >
+          add recipe
+        </Link>
       </section>
       <section className="cards-wrapper">
-        {recipesComponent}
-        {/* {state.isSearched ? renderCourses(state.courses) : renderCourses(courses)} */}
+        {!isSearched && recipesComponent}
+        {isSearched && recipes && renderCourses(searchedCourses)}
       </section>
-      </>
+    </>
   );
 }
 

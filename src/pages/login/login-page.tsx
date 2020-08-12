@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import Input from '@material-ui/core/Input';
 
@@ -138,16 +138,14 @@ const LoginPage = () => {
           {state.isValidPassword ? '' : getErrorWrapper(ERROR_EMPTY_PASSWORD)}
           {state.isExistedUser ? '' : getErrorWrapper(ERROR_USER_NOT_EXIST)}
           {state.isPasswordMatches && state.isValidPassword ? '' : getErrorWrapper(ERROR_PASSWORD_NOT_MATCH)}
-          <BrowserRouter>
-            <Link
-              to="/courses"
-              className="login-section__submit"
-              onClick={onClickLogin}
-              onKeyPress={onKeyPressed}
-            >
-              Login
-            </Link>
-          </BrowserRouter>
+          <Link
+            to="/courses"
+            className="login-section__submit"
+            onClick={onClickLogin}
+            onKeyPress={onKeyPressed}
+          >
+            Login
+          </Link>
         </form>
       </div>
     </main>

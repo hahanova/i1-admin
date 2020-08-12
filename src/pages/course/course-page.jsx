@@ -1,42 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
 
-import SimpleBreadcrumbs from '../../components/breadcrumbs/breadcrumbs';
+import SimpleBreadcrumbs from "../../components/breadcrumbs/breadcrumbs";
 
-import { db } from '../../store/firebase';
+import { db } from "../../store/firebase";
 
-import './course-page.scss';
+import "./course-page.scss";
 
 const CoursePage = ({ history, location }) => {
-  const [, , currentType, id] = location.pathname.split('/');
+  const isNewRecipe = location.pathname.match(/\/new$/);
+  const [, , currentType, id] = location.pathname.split("/");
+  const cancelRoute = isNewRecipe ? '/maincourses' : `/${currentType}`;
 
   const [state, setState] = useState({
     ingredients: [],
     time: [],
     description: '',
     src: '',
+    name: ''
   });
-console.log('currentType',currentType)
-  const t = currentType || '';
 
-  const [type, setType] = useState(t);console.log('type',type)
-  const [difficulty, setDifficulty] = useState('');console.log('difficulty',difficulty)
+  const [type, setType] = useState(currentType || "");
+  const [difficulty, setDifficulty] = useState("");
 
   useEffect(() => {
     if (currentType && id) {
       async function fetchData() {
-        const response = await db.get(`dishes/${currentType}/${id}`).then((recipe) => {
-          return recipe;
-        });;
+        const response = await db
+          .get(`dishes/${currentType}/${id}`)
+          .then((recipe) => {
+            return recipe;
+          });
 
-        setState({...state, ...response});
+        setState({ ...state, ...response });
         // setType(response.type);
         setDifficulty(response.difficulty);
       }
@@ -45,25 +47,27 @@ console.log('currentType',currentType)
   }, [currentType, id]);
 
   const handleSaveBtn = () => {
-    const {
-      src,
-      ingredients,
-      description,
-      time,
-      name,
-    } = state;
+    const { src, ingredients, description, time, name } = state;
 
-    if (!name || !type || !src || !ingredients || !description || !time || !difficulty) {
-      alert('Плиз, заполни все поля');
+    if (
+      !name ||
+      !type ||
+      !src ||
+      !ingredients ||
+      !description ||
+      !time ||
+      !difficulty
+    ) {
+      alert("Плиз, заполни все поля");
       return;
-    } else if (id === 'new') {
+    } else if (isNewRecipe) {
       db.add({ ...state, type, difficulty }, `dishes/${type}/`);
     } else {
-      db.update({ ...state, type, difficulty });
+      db.update({ ...state, type, difficulty, id });
       // dispatch(editCourseAction({ ...state, id: id, type, difficulty }));
     }
 
-    const nextLocation = type ? `/${type}` : 'maincourses';
+    const nextLocation = type ? `/${type}` : "maincourses";
 
     history.push(nextLocation);
   };
@@ -80,25 +84,22 @@ console.log('currentType',currentType)
   };
 
   return (
-    <section className="main">{console.log('hello', {...state, type, difficulty})}
+    <section className="main">
+      {console.log("hello", { ...state, type, difficulty })}
       <SimpleBreadcrumbs title={state.name} type={currentType} />
       <form>
         <div className="course-form__container">
-          <TextField
+         <TextField
             id="name"
             label="Название"
-            defaultValue={state.name}
+            value={state.name}
             margin="normal"
             onChange={onChangeField}
           />
 
           <FormControl>
             <InputLabel id="type">тип блюда</InputLabel>
-            <Select
-              htmlFor="type"
-              value={type}
-              onChange={onSelectType}
-            >
+            <Select htmlFor="type" value={type} onChange={onSelectType}>
               <MenuItem value="maincourses">первое блюдо</MenuItem>
               <MenuItem value="secondcourses">второе блюдо</MenuItem>
               <MenuItem value="pies">пирог</MenuItem>
@@ -112,7 +113,7 @@ console.log('currentType',currentType)
             id="src"
             label="юрл картинки"
             type="textarea"
-            defaultValue={state.src}
+            value={state.src}
             margin="normal"
             onChange={onChangeField}
           />
@@ -120,7 +121,7 @@ console.log('currentType',currentType)
             id="time"
             label="время приготовления"
             type="textarea"
-            defaultValue={state.time}
+            value={state.time}
             margin="normal"
             onChange={onChangeField}
           />
@@ -139,10 +140,7 @@ console.log('currentType',currentType)
           </FormControl>
         </div>
 
-        <label
-          id="ingredients"
-          className="course-form__description-title"
-        >
+        <label id="ingredients" className="course-form__description-title">
           Ингридиенты
         </label>
 
@@ -151,15 +149,11 @@ console.log('currentType',currentType)
           className="course-form__description"
           htmlFor="ingredients"
           placeholder="2 яйца, 3ст муки..."
-          defaultValue={state.ingredients}
+          value={state.ingredients}
           onChange={onChangeField}
-        >
-        </textarea>
+        ></textarea>
 
-        <label
-          id="description"
-          className="course-form__description-title"
-        >
+        <label id="description" className="course-form__description-title">
           Описание
         </label>
 
@@ -168,21 +162,16 @@ console.log('currentType',currentType)
           className="course-form__description"
           htmlFor="description"
           placeholder="пиши..."
-          defaultValue={state.description}
+          value={state.description}
           onChange={onChangeField}
-        >
-        </textarea>
+        ></textarea>
 
         <div className="course-form__buttons">
-          <Button
-            size="small"
-            color="primary"
-            onClick={handleSaveBtn}
-          >
+          <Button size="small" color="primary" onClick={handleSaveBtn}>
             Save
           </Button>
           <Link
-            to="/courses"
+            to={cancelRoute}
             className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
           >
             Cancel
@@ -193,4 +182,4 @@ console.log('currentType',currentType)
   );
 };
 
-export default connect()(CoursePage);
+export default CoursePage;
