@@ -1,7 +1,9 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import logo from '../../logo.svg';
+
+// import logo from '../../logo.svg';
+import { courseTypesArray } from '../../constants';
 
 import {
   selectAuthorizedUser,
@@ -22,19 +24,10 @@ const HeaderComponent = () => {
     }
   };
 
-  const recipeTypes = [
-    'maincourses',
-    'secondcourses',
-    'pies',
-    'desserts',
-    'drinks',
-    'sauces'
-  ];
-
   return (
     <header className="header shadow">
       <div className="header__nav">
-        {recipeTypes.map((dishType) => <Link to={`/${dishType}`} key={dishType} className="header__nav-link">{dishType}</Link>)}
+        {courseTypesArray.map((type) => <Link to={`/${type}`} key={type} className="header__nav-link">{type}</Link>)}
       </div>
       <div className="header__auth">
         <p>{user}</p>

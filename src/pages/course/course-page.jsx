@@ -8,6 +8,7 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 
 import SimpleBreadcrumbs from "../../components/breadcrumbs/breadcrumbs";
+import { courseTypes } from '../../constants';
 
 import { db } from "../../store/firebase";
 
@@ -16,7 +17,7 @@ import "./course-page.scss";
 const CoursePage = ({ history, location }) => {
   const isNewRecipe = location.pathname.match(/\/new$/);
   const [, , currentType, id] = location.pathname.split("/");
-  const cancelRoute = isNewRecipe ? '/maincourses' : `/${currentType}`;
+  const cancelButtonRoute = isNewRecipe ? `/${courseTypes.mainCourses}` : `/${currentType}`;
 
   const [state, setState] = useState({
     ingredients: [],
@@ -26,8 +27,8 @@ const CoursePage = ({ history, location }) => {
     name: ''
   });
 
-  const [type, setType] = useState(currentType || "");
-  const [difficulty, setDifficulty] = useState("");
+  const [type, setType] = useState(currentType || null);
+  const [difficulty, setDifficulty] = useState(null);
 
   useEffect(() => {
     if (currentType && id) {
@@ -39,7 +40,6 @@ const CoursePage = ({ history, location }) => {
           });
 
         setState({ ...state, ...response });
-        // setType(response.type);
         setDifficulty(response.difficulty);
       }
       fetchData();
@@ -49,25 +49,16 @@ const CoursePage = ({ history, location }) => {
   const handleSaveBtn = () => {
     const { src, ingredients, description, time, name } = state;
 
-    if (
-      !name ||
-      !type ||
-      !src ||
-      !ingredients ||
-      !description ||
-      !time ||
-      !difficulty
-    ) {
+    if (!name || !type || !src || !ingredients || !description || !time || !difficulty) {
       alert("Плиз, заполни все поля");
       return;
     } else if (isNewRecipe) {
       db.add({ ...state, type, difficulty }, `dishes/${type}/`);
     } else {
       db.update({ ...state, type, difficulty, id });
-      // dispatch(editCourseAction({ ...state, id: id, type, difficulty }));
     }
 
-    const nextLocation = type ? `/${type}` : "maincourses";
+    const nextLocation = type ? `/${type}` : `/${courseTypes.mainCourses}`;
 
     history.push(nextLocation);
   };
@@ -79,6 +70,7 @@ const CoursePage = ({ history, location }) => {
   const onSelectType = ({ target: { value } }) => {
     setType(value);
   };
+
   const onSelectDifficulty = ({ target: { value } }) => {
     setDifficulty(value);
   };
@@ -171,7 +163,7 @@ const CoursePage = ({ history, location }) => {
             Save
           </Button>
           <Link
-            to={cancelRoute}
+            to={cancelButtonRoute}
             className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
           >
             Cancel

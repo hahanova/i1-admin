@@ -139,7 +139,7 @@ const LoginPage = () => {
           {state.isExistedUser ? '' : getErrorWrapper(ERROR_USER_NOT_EXIST)}
           {state.isPasswordMatches && state.isValidPassword ? '' : getErrorWrapper(ERROR_PASSWORD_NOT_MATCH)}
           <Link
-            to="/courses"
+            to="/maincourses"
             className="login-section__submit"
             onClick={onClickLogin}
             onKeyPress={onKeyPressed}

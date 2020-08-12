@@ -16,8 +16,10 @@ class Database {
     this.database = firebase.database();
   }
 
-  add(data, table) {
-    return this.database.ref(table).push(data).key;
+  add(data) {
+    const {type, ...recipe } = data;
+
+    return this.database.ref( `dishes/${type}/`).push(recipe).key;
   }
 
   get(tableName) {
@@ -31,13 +33,6 @@ class Database {
   }
 
   update(data) {
-    console.log('updates', data);
-    const updates = {};
-
-    updates[data[0]] = data[1];
-    console.log(555, updates)
-    console.log(4444, data)
-
     const {
       ingredients,
       time,
@@ -58,8 +53,6 @@ class Database {
       difficulty,
       type,
     });
-
-    // this.database.ref().update(updates);
   }
 
   delete(type, id) {

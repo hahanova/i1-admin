@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-const CourseCardComponent = ({ description, difficulty, ingredients, title, imageSrc, duration, id, type, updateCourses }) => {
+const CourseCardComponent = ({ description, difficulty, ingredients, title, imageSrc, duration, id, type }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
