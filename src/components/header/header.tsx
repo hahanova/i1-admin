@@ -25,13 +25,13 @@ const HeaderComponent = () => {
   };
 
   return (
-    <header className="header shadow">
+    <header className="header">
       <div className="header__nav">
         {courseTypesArray.map((type) => <Link to={`/${type}`} key={type} className="header__nav-link">{type}</Link>)}
       </div>
       <div className="header__auth">
-        <p>{user}</p>
-          <Link to="/login" onClick={handleClick}>{authMessage}</Link>
+        {user && <p>{user}</p>}
+        <Link to="/login" onClick={handleClick}>{authMessage}</Link>
       </div>
     </header>
   );

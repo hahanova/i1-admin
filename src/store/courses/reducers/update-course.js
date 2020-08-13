@@ -25,9 +25,6 @@ const coursesCollection = new Map([
   [REMOVE_COURSE, (state, {
     payload: { id, type }
   }) => {
-    console.log('state', state)
-    console.log('id', id, type)
-
     const updatedCoursesType = Object.keys(state[type]).reduce((object, key) => {
       if (key !== id) {
         object[key] = state[type][key]

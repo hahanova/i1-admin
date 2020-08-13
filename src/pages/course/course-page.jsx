@@ -79,7 +79,7 @@ const CoursePage = ({ history, location }) => {
     <section className="main">
       {console.log("hello", { ...state, type, difficulty })}
       <SimpleBreadcrumbs title={state.name} type={currentType} />
-      <form>
+      <form className="course-form">
         <div className="course-form__container">
          <TextField
             id="name"

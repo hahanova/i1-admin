@@ -16,14 +16,14 @@ const initialState = {
       login: 'hahanova',
       password: 'qwerty',
     },
-    godlevskyi: {
-      login: 'godlevskyi',
+    ivanHahan: {
+      login: 'ivanHahan',
       password: 'qwerty',
-    },
+    }
   },
   auth: {
     authMessage: getAuthenticatedUser() ? 'logout' : 'login',
-    user: getAuthenticatedUser() || 'user',
+    user: getAuthenticatedUser() || null,
   }
 };
 
@@ -61,7 +61,7 @@ const usersCollection = new Map([
     return {
       ...state,
       auth: {
-        user: 'user',
+        user: null,
         authMessage: 'login',
       },
     }

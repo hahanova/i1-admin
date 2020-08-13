@@ -12,10 +12,10 @@ import './login.scss';
 
 const LOGIN_REGEX: RegExp = /^[a-zA-Z]+$/;
 const PASSWORD_REGEX: RegExp = /^[a-zA-Z0-9]+$/;
-const ERROR_EMPTY_LOGIN: string = 'Please enter the field login';
-const ERROR_EMPTY_PASSWORD: string = 'Please enter the field password';
-const ERROR_USER_NOT_EXIST: string = 'No user with such login';
-const ERROR_PASSWORD_NOT_MATCH: string = 'Wrong password';
+const ERROR_EMPTY_LOGIN: string = 'Введи логин';
+const ERROR_EMPTY_PASSWORD: string = 'Введи пароль';
+const ERROR_USER_NOT_EXIST: string = 'Юзера с таким логином не существует';
+const ERROR_PASSWORD_NOT_MATCH: string = 'Неверный пароль';
 
 const LoginPage = () => {
   const [state, setState] = useState({
@@ -117,7 +117,7 @@ const LoginPage = () => {
   return (
     <main className="login-section__container">
       <div className="login-section__wrapper">
-        <form className="login-section shadow">
+        <form className="login-section">
           <Input
             className={loginClassName}
             autoFocus={true}
@@ -144,7 +144,7 @@ const LoginPage = () => {
             onClick={onClickLogin}
             onKeyPress={onKeyPressed}
           >
-            Login
+            логин
           </Link>
         </form>
       </div>

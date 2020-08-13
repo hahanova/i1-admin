@@ -20,7 +20,7 @@
     height: 100vh;
     margin: 0;
     padding: 0;
-    background: linear-gradient(45deg, #ffd400, #FFEFBA);
+    background: linear-gradient(45deg, #2d2d34, #111111)
   }
 
   &__submit {
@@ -41,7 +41,8 @@
     text-decoration: none;
 
     &:hover {
-      background: #ffd400;
+      background: #2d2d34;
+      color: white;
       text-decoration: none;
     }
   }
