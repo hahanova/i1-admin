@@ -25,15 +25,18 @@ const useStyles = makeStyles({
   media: {
     height: 140,
   },
+  servingsNumber: {
+    paddingTop: 10
+  },
 });
 
-const CourseCardComponent = ({ description, difficulty, ingredients, title, imageSrc, duration, id, type }) => {
+const CourseCardComponent = ({ description, difficulty, ingredients, title, imageSrc, duration, id, type, servingsNumber }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
   const removeCourse = () => {
     // eslint-disable-next-line no-restricted-globals
-    if(confirm(`Точно хочешь удалить рецепт: ${title}`)) {
+    if (confirm(`Точно хочешь удалить рецепт: ${title}`)) {
       db.delete(type, id);
       dispatch(removeCourseAction({ id, type }));
     }
@@ -56,8 +59,11 @@ const CourseCardComponent = ({ description, difficulty, ingredients, title, imag
               {description.length > 50 ? description.slice(0, 50) + '...' : description}
             </Typography>
             <hr></hr>
-            <Typography variant="body2" color="textSecondary" component="p">
-            {ingredients}
+            <Typography variant="body2" color="textSecondary" component="p" class="pre">
+              {ingredients}
+            </Typography>
+            <Typography className={classes.servingsNumber} variant="body2" color="textSecondary" component="p">
+              {servingsNumber && `рецепт на: ${servingsNumber}`}
             </Typography>
             <div className="card__time">
               <span className="card__time-duration">{duration}</span>

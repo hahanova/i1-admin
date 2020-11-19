@@ -24,13 +24,16 @@ const CoursePage = ({ history, location }) => {
     time: [],
     description: '',
     src: '',
-    name: ''
+    name: '',
+    servingsNumber: '',
   });
 
-  const [type, setType] = useState(currentType || null);
-  const [difficulty, setDifficulty] = useState(null);
+  const [type, setType] = useState(currentType || '');
+  const [difficulty, setDifficulty] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     if (currentType && id) {
       async function fetchData() {
         const response = await db
@@ -41,15 +44,16 @@ const CoursePage = ({ history, location }) => {
 
         setState({ ...state, ...response });
         setDifficulty(response.difficulty);
+        setLoading(false);
       }
       fetchData();
     }
-  }, [currentType, id]);
+  }, [currentType, id, setDifficulty, setState]);
 
   const handleSaveBtn = () => {
-    const { src, ingredients, description, time, name } = state;
+    const { src, ingredients, description, time, name, servingsNumber } = state;
 
-    if (!name || !type || !src || !ingredients || !description || !time || !difficulty) {
+    if (!name || !type || !src || !ingredients || !description || !time || !difficulty || !servingsNumber) {
       alert("Плиз, заполни все поля");
       return;
     } else if (isNewRecipe) {
@@ -63,8 +67,8 @@ const CoursePage = ({ history, location }) => {
     history.push(nextLocation);
   };
 
-  const onChangeField = ({ target: { value, id } }) => {
-    setState({ ...state, [id]: value });
+  const onChangeField = ({ target: { value, id: fieldId } }) => {
+    setState({ ...state, [fieldId]: value });
   };
 
   const onSelectType = ({ target: { value } }) => {
@@ -75,15 +79,19 @@ const CoursePage = ({ history, location }) => {
     setDifficulty(value);
   };
 
+  if (isLoading) {
+    return 'Loading';
+  }
+
   return (
     <section className="main">
       {console.log("hello", { ...state, type, difficulty })}
       <SimpleBreadcrumbs title={state.name} type={currentType} />
       <form className="course-form">
         <div className="course-form__container">
-         <TextField
+          <TextField
             id="name"
-            label="Название"
+            label="название"
             value={state.name}
             margin="normal"
             onChange={onChangeField}
@@ -94,6 +102,7 @@ const CoursePage = ({ history, location }) => {
             <Select htmlFor="type" value={type} onChange={onSelectType}>
               <MenuItem value="maincourses">первое блюдо</MenuItem>
               <MenuItem value="secondcourses">второе блюдо</MenuItem>
+              <MenuItem value="salads">салаты</MenuItem>
               <MenuItem value="pies">пирог</MenuItem>
               <MenuItem value="desserts">десерт</MenuItem>
               <MenuItem value="drinks">напиток</MenuItem>
@@ -118,7 +127,16 @@ const CoursePage = ({ history, location }) => {
             onChange={onChangeField}
           />
 
-          <FormControl>
+          <TextField
+            id="servingsNumber"
+            label="количество порций"
+            value={state.servingsNumber}
+            margin="normal"
+            onChange={onChangeField}
+            placeholder="2-3 порции"
+          />
+
+          <FormControl margin="normal">
             <InputLabel id="difficulty">сложность</InputLabel>
             <Select
               htmlFor="difficulty"

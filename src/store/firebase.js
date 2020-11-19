@@ -42,6 +42,7 @@ class Database {
       difficulty,
       id,
       type,
+      servingsNumber,
     } = data;
 
     firebase.database().ref(`dishes/${type}/` + id).set({
@@ -52,6 +53,7 @@ class Database {
       name,
       difficulty,
       type,
+      servingsNumber,
     });
   }
 

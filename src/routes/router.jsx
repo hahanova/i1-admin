@@ -18,6 +18,7 @@ const Routing = () => {
       <Route path="/new" component={CoursePage} />
       <Route path="/maincourses" component={recipes} />
       <Route path="/secondcourses" component={recipes} />
+      <Route path="/salads" component={recipes} />
       <Route path="/pies" component={recipes} />
       <Route path="/desserts" component={recipes} />
       <Route path="/drinks" component={recipes} />

@@ -80,6 +80,7 @@ const CoursesPage = ({ location }) => {
         time,
         src,
         name,
+        servingsNumber,
       } = courses[key];
 
       const id = key;
@@ -96,6 +97,7 @@ const CoursesPage = ({ location }) => {
           title={name}
           updateCourses={updateCourses}
           type={currentRecipeType}
+          servingsNumber={servingsNumber}
         />
       );
     });

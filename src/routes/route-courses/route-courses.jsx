@@ -10,6 +10,7 @@ const CoursesRoute = ({ match }) =>{
       <Switch>
         <Route path="/edit/maincourses/:id" component={CoursePage} />
         <Route path="/edit/secondcourses/:id" component={CoursePage} />
+        <Route path="/edit/salads/:id" component={CoursePage} />
         <Route path="/edit/desserts/:id" component={CoursePage} />
         <Route path="/edit/drinks/:id" component={CoursePage} />
         <Route path="/edit/pies/:id" component={CoursePage} />

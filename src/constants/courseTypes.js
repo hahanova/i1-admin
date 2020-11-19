@@ -1,6 +1,7 @@
 export const courseTypes = {
   mainCourses: 'maincourses',
   secondCourses: 'secondcourses',
+  salads: 'salads',
   pies: 'pies',
   desserts: 'desserts',
   drinks: 'drinks',
