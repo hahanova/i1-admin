@@ -59,7 +59,7 @@ const CourseCardComponent = ({ description, difficulty, ingredients, title, imag
               {description.length > 50 ? description.slice(0, 50) + '...' : description}
             </Typography>
             <hr></hr>
-            <Typography variant="body2" color="textSecondary" component="p" class="pre">
+            <Typography variant="body2" color="textSecondary" component="p">
               {ingredients}
             </Typography>
             <Typography className={classes.servingsNumber} variant="body2" color="textSecondary" component="p">

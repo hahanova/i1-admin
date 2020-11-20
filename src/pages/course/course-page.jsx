@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
+
+import {
+  TextField,
+  Button,
+  InputLabel,
+  MenuItem,
+  Select,
+  FormControl,
+  CardMedia,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+} from "@material-ui/core";
 
 import SimpleBreadcrumbs from "../../components/breadcrumbs/breadcrumbs";
 import { courseTypes } from '../../constants';
-
 import { db } from "../../store/firebase";
 
 import "./course-page.scss";
@@ -30,10 +37,8 @@ const CoursePage = ({ history, location }) => {
 
   const [type, setType] = useState(currentType || '');
   const [difficulty, setDifficulty] = useState('');
-  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
     if (currentType && id) {
       async function fetchData() {
         const response = await db
@@ -44,16 +49,15 @@ const CoursePage = ({ history, location }) => {
 
         setState({ ...state, ...response });
         setDifficulty(response.difficulty);
-        setLoading(false);
       }
       fetchData();
     }
   }, [currentType, id, setDifficulty, setState]);
 
   const handleSaveBtn = () => {
-    const { src, ingredients, description, time, name, servingsNumber } = state;
+    const { src, ingredients, description, time, name } = state;
 
-    if (!name || !type || !src || !ingredients || !description || !time || !difficulty || !servingsNumber) {
+    if (!name || !type || !src || !ingredients || !description || !time || !difficulty) {
       alert("Плиз, заполни все поля");
       return;
     } else if (isNewRecipe) {
@@ -79,10 +83,6 @@ const CoursePage = ({ history, location }) => {
     setDifficulty(value);
   };
 
-  if (isLoading) {
-    return 'Loading';
-  }
-
   return (
     <section className="main">
       {console.log("hello", { ...state, type, difficulty })}
@@ -95,14 +95,21 @@ const CoursePage = ({ history, location }) => {
             value={state.name}
             margin="normal"
             onChange={onChangeField}
+            variant="outlined"
           />
 
-          <FormControl>
-            <InputLabel id="type">тип блюда</InputLabel>
-            <Select htmlFor="type" value={type} onChange={onSelectType}>
+          <FormControl variant="outlined">
+            <InputLabel id="type-label">тип блюда</InputLabel>
+            <Select
+              labelId="type-label"
+              id="type"
+              value={type}
+              onChange={onSelectType}
+              label="тип блюда"
+            >
               <MenuItem value="maincourses">первое блюдо</MenuItem>
               <MenuItem value="secondcourses">второе блюдо</MenuItem>
-              <MenuItem value="salads">салаты</MenuItem>
+              <MenuItem value="salads">салат</MenuItem>
               <MenuItem value="pies">пирог</MenuItem>
               <MenuItem value="desserts">десерт</MenuItem>
               <MenuItem value="drinks">напиток</MenuItem>
@@ -117,7 +124,19 @@ const CoursePage = ({ history, location }) => {
             value={state.src}
             margin="normal"
             onChange={onChangeField}
+            variant="outlined"
           />
+
+          {state.src &&
+            (<CardMedia
+              component="img"
+              alt="ссылка картинки поломана"
+              height="140"
+              image={state.src}
+              title="Contemplative Reptile"
+            />)
+          }
+
           <TextField
             id="time"
             label="время приготовления"
@@ -125,6 +144,7 @@ const CoursePage = ({ history, location }) => {
             value={state.time}
             margin="normal"
             onChange={onChangeField}
+            variant="outlined"
           />
 
           <TextField
@@ -134,25 +154,22 @@ const CoursePage = ({ history, location }) => {
             margin="normal"
             onChange={onChangeField}
             placeholder="2-3 порции"
+            variant="outlined"
           />
 
-          <FormControl margin="normal">
-            <InputLabel id="difficulty">сложность</InputLabel>
-            <Select
-              htmlFor="difficulty"
-              value={difficulty}
-              onChange={onSelectDifficulty}
-            >
-              <MenuItem value="1">изи бризи</MenuItem>
-              <MenuItem value="2">нормуль</MenuItem>
-              <MenuItem value="3">сложна</MenuItem>
-            </Select>
+          <FormControl component="fieldset" className="course-form__radioset">
+            <FormLabel component="legend">сложность</FormLabel>
+            <RadioGroup row aria-label="сложность" name="difficulty" value={difficulty} onChange={onSelectDifficulty}>
+              <FormControlLabel value="1" control={<Radio />} label="изи бризи" />
+              <FormControlLabel value="2" control={<Radio />} label="нормуль" />
+              <FormControlLabel value="3" control={<Radio />} label="сложна" />
+            </RadioGroup>
           </FormControl>
         </div>
 
         <label id="ingredients" className="course-form__description-title">
           Ингридиенты
-        </label>
+          </label>
 
         <textarea
           id="ingredients"
@@ -165,7 +182,7 @@ const CoursePage = ({ history, location }) => {
 
         <label id="description" className="course-form__description-title">
           Описание
-        </label>
+          </label>
 
         <textarea
           id="description"
@@ -179,7 +196,7 @@ const CoursePage = ({ history, location }) => {
         <div className="course-form__buttons">
           <Button size="small" color="primary" onClick={handleSaveBtn}>
             Save
-          </Button>
+            </Button>
           <Link
             to={cancelButtonRoute}
             className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
