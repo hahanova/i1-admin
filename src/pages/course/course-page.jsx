@@ -52,6 +52,7 @@ const CoursePage = ({ history, location }) => {
       }
       fetchData();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentType, id, setDifficulty, setState]);
 
   const handleSaveBtn = () => {

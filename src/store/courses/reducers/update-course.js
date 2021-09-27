@@ -5,8 +5,6 @@ import {
   SET_COURSES,
 } from '../actions';
 
-import { db } from "../../firebase";
-
 const initialState = {};
 
 const coursesCollection = new Map([
@@ -39,13 +37,7 @@ const coursesCollection = new Map([
     };
   }],
   [EDIT_COURSE, (state, { payload }) => {
-    let currentIndex;
-
-    state.find((course, index) => {
-      if (course.id === payload.id) {
-        currentIndex = index;
-      }
-    });
+    const currentIndex = state.some((course) => course.id === payload.id)?.index;
 
     state[currentIndex] = {...payload };
 
